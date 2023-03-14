@@ -1,4 +1,4 @@
-# MujocoPygameInterface
+# Mujoco Pygame Interface
 Provide pygame interface of mujoco to guys who familiar to pygame rather than mujoco-builtin viewer.
 <p style="text-align: center;">
     <img src="./readme/1.gif" style="background-color: white;">
