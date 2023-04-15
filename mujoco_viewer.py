@@ -212,7 +212,7 @@ class MjViewer():
         self.physics.reset(*kargs)
         self.start_time = time.time()
 
-    def realtime_render(self, physics:MujocoPhysics, framerate):
+    def realtime_render(self, physics:MujocoPhysics, framerate, sim_rate=1.0):
         """
         实时渲染
         """
@@ -222,7 +222,7 @@ class MjViewer():
         clock = pygame.time.Clock()
 
         while True:
-            if self.physics.data.time < (time.time() - self.start_time):
+            if self.physics.data.time < sim_rate * (time.time() - self.start_time):
                 self._run_user_function(self.physics.data.time)
                 self.physics.step()
                 continue
@@ -249,7 +249,7 @@ class MjViewer():
 
 if __name__ == "__main__":
     framerate = 120  # (Hz)
-    with open("pure_vessel.xml","r") as f :
+    with open("./models/pure_vessel.xml","r") as f :
         swinging_body = f.read()
     # swinging_body = """
     #     <mujoco>

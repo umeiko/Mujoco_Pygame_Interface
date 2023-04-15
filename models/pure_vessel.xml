@@ -1,0 +1,14 @@
+<mujoco model="Rope">
+    <visual>
+        <global offheight = "1080" offwidth = "1920"/>
+    </visual>
+
+    <asset>
+        <mesh name="vessel_mesh" file="./models/vessel.stl" scale = "0.1 0.1 0.1"/>
+    </asset>
+
+    <worldbody>
+        <geom name="vessel" type="mesh" mesh="vessel_mesh" pos = "0 0 .1" rgba ="0.9 0.1 0.1 0.6"/>
+    </worldbody>
+</mujoco>
+ 
