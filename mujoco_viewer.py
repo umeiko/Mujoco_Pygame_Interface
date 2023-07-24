@@ -204,25 +204,29 @@ class MjViewer():
             self.display.blit(text_surface, (0, y))
             y += self.font.get_height()
 
-    def _run_user_function(self, simulation_time:SimTime):
+    def _run_user_function(self, simulation_time:SimTime, *args):
         for func in self._custom_funcs:
-            func(simulation_time)
+            func(simulation_time, *args)
 
     def reset(self, *kargs):
         self.physics.reset(*kargs)
         self.start_time = time.time()
 
-    def realtime_render(self, physics:MujocoPhysics, framerate, sim_rate=1.0):
+    def realtime_render(self, physics:MujocoPhysics, framerate, sim_rate=1.0, min_framerate=10):
         """
         实时渲染
         """
         self.physics = physics
         self.physics.reset()
+        min_time = 1 / min_framerate
         self.start_time = time.time()
+        time_since_last_render = time.time()
         clock = pygame.time.Clock()
 
         while True:
-            if self.physics.data.time < sim_rate * (time.time() - self.start_time):
+            now_time = time.time()
+            if self.physics.data.time < sim_rate * (now_time - self.start_time) and \
+            (now_time - time_since_last_render) < min_time:
                 self._run_user_function(self.physics.data.time)
                 self.physics.step()
                 continue
@@ -234,8 +238,9 @@ class MjViewer():
             clock.tick(framerate)
             self._event_handler()
             self.render(pixels, False)
-            self.screen_print(f"Simulate_time: {self.physics.data.time:.3f}\nRealistic_time: {time.time() - self.start_time:.3f}")
+            self.screen_print(f"Simulate_time: {self.physics.data.time:.3f}\nRealistic_time: {now_time - self.start_time:.3f}")
             pygame.display.flip()
+            time_since_last_render = now_time
     
     def simulate(self, physics:MujocoPhysics):
         """不渲染图形界面的情况下执行仿真"""
